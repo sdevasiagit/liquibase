@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1642678851334-1
+      author: sdevasia (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: organizationPK
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+            tableName: organization

@@ -1,0 +1,12 @@
+databaseChangeLog:
+- changeSet:
+    id: 1644277293115-1
+    author: sdevasia (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: country
+            type: varchar(255)
+        tableName: organization
+

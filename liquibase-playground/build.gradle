@@ -1,0 +1,77 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.2'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'idea'
+	id 'org.liquibase.gradle' version '2.1.1'
+}
+
+group 'com.cisco'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.liquibase:liquibase-core'
+	implementation 'mysql:mysql-connector-java'
+
+
+	runtimeOnly 'com.h2database:h2'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	liquibaseRuntime 'org.liquibase:liquibase-core'
+	liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:3.0.0'
+	liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate5:3.6'
+	liquibaseRuntime 'mysql:mysql-connector-java'
+	liquibaseRuntime 'org.springframework.boot:spring-boot'
+	liquibaseRuntime 'org.springframework:spring-orm'
+	liquibaseRuntime 'javax.xml.bind:jaxb-api'
+	liquibaseRuntime 'ch.qos.logback:logback-classic:1.2.3'
+	liquibaseRuntime 'org.yaml:snakeyaml:1.17'
+	liquibaseRuntime sourceSets.main.output
+}
+
+diff.dependsOn compileJava
+diffChangeLog.dependsOn compileJava
+rollbackCount.dependsOn compileJava
+
+def timeStamp = buildTimestamp();
+//def changeLogFileName = 'src/main/resources/db/changelogs/db-changelog-' + timeStamp + '.yml'
+def changeLogFileName = '/db/changelogs/db-changelog-08022022-051128492.yml'
+
+liquibase {
+	activities {
+		main {
+			driver 'com.mysql.cj.jdbc.Driver'
+			url 'jdbc:mysql://127.0.0.1:3306/liqui?useSSL=false&allowPublicKeyRetrieval=true'
+			username 'root'
+			password 'root'
+			changeLogFile changeLogFileName
+			referenceUrl 'hibernate:spring:com.cisco.liquibase.domain' +
+					'?dialect=' +
+					'org.hibernate.dialect.MySQL5Dialect' +
+					'&hibernate.physical_naming_strategy=' +
+					'org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy' +
+					'&hibernate.implicit_naming_strategy=' +
+					'org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
+		}
+	}
+}
+
+def buildTimestamp() {
+	def date = new Date()
+	def formattedDate = date.format('ddMMyyyy-hhmmssSSS')
+	return formattedDate
+}
+
+
+//https://www.baeldung.com/liquibase-rollback

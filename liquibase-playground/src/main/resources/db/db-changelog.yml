@@ -1,0 +1,6 @@
+databaseChangeLog:
+-  include:
+        file: classpath:db/base/db.main-changelog.yml
+-  include:
+        file: classpath:db/changelogs/db-changelog-08022022-051128492.yml
+
